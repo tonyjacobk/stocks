@@ -3,7 +3,7 @@
  "builds": [
  {
  "src": "myapp.py",
- "use": "@vercel/puthon"
+ "use": "@vercel/python"
  }
  ],
  "routes": [
