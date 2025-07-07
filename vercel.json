@@ -1,0 +1,16 @@
+{
+ "version": 2,
+ "builds": [
+ {
+ "src": "myapp.py",
+ "use": "@vercel/puthon"
+ }
+ ],
+ "routes": [
+ {
+ "src": "/(.*)",
+ "dest": "myapp.py"
+ }
+ ]
+ 
+ }
