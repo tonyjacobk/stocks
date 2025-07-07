@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Table</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+        {{ data }}
+    <table>
+        <tr>
+            <th>Company</th>
+            <th>Broker</th>
+            <th>Recommendation</th>
+            <th>Target</th>
+            <th>Report Date</th>
+            <th>URL</th>
+        </tr>
+        {% for row in data %}
+        <tr>
+            <td>{{ row['company'] }}</td>
+            <td>{{ row['broker'] }}</td>
+            <td>{{ row['recommendation'] }}</td>
+             <td>{{ row['target'] }}</td>
+            <td>{{ row['report_date'] }}</td>
+            <td><a href="{{ row['URL'] }}" target="_blank"><img src="{{ url_for('static', filename='icon.png') }}" alt="URL Icon" width="20"></a></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <div>
+        {% if page > 1 %}
+        <a href="{{ url_for('index', page=page-1) }}">Previous</a>
+         {% endif %}
+        <span>Page {{ page }} of {{ total_pages }}</span>
+        {% if page < total_pages %}
+        <a href="{{ url_for('index', page=page+1) }}">Next</a>
+        {% endif %}
+    </div>
+</body>
+</html>
