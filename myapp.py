@@ -18,7 +18,7 @@ def index(page=1):
     total_pages = ceil(total_rows / per_page)
     offset = (page - 1) * per_page
     print (offset)
-    cur.execute(f"SELECT * FROM reports LIMIT 20 OFFSET 0 ;")
+    cur.execute(f"SELECT * FROM reports ORDER BY report_date DESC LIMIT 20 OFFSET 0 ;")
     data = cur.fetchall()
     print (data)
     cur.close()
