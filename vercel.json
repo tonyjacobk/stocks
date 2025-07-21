@@ -10,15 +10,12 @@
  {
  "src": "/(.*)",
  "dest": "myapp.py"
- }
+ },
 
  {
  "src": "/brk(.*)",
  "dest": "myapp.py"
-
-
-
-
+ }
  ]
  
  }
