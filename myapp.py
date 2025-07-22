@@ -12,10 +12,10 @@ def index(page=1):
 @app.route('/brk/<brok>')
 @app.route('/brk/<brok>/<int:page>')
 def search_broker(brok,page=1):
-    brok=urllib.parse.unquote(brok)
+    brok1=urllib.parse.unquote(brok)
     print(brok)
     data,total_pages=get_broker(page,rows_per_page,brok)
-    return render_template('index.html', data=data, page=page, total_pages=total_pages,broker=brok)
+    return render_template('index.html', data=data, page=page, total_pages=total_pages,broker=brok,brk1=brok1)
 if __name__ == '__main__':
     app.run(host='0.0.0.0',debug=True)
 
