@@ -72,4 +72,32 @@ def get_broker(pageNo,per_page,broker):
     data = cur.fetchall()
     cursor.close()
     return data,total_pages
+def get_stock(pageNo,per_page,stock):
+    mysql=connect()
+    cursor=mysql.cursor()
+    per_page = 20
+    cur = mysql.cursor()
+    cur.execute("SELECT COUNT(*) FROM reports where company= %s",(stock))
+    total_rows = cur.fetchone()['COUNT(*)']
+    total_pages = ceil(total_rows / per_page)
+    offset = (pageNo - 1) * per_page
+    cur.execute(f"SELECT * FROM reports where company = %s ORDER BY report_date DESC  LIMIT 20 OFFSET %s", (stock,offset) )
+    data = cur.fetchall()
+    cursor.close()
+    return data,total_pages
+def get_stock_partial(pageNo,per_page,stock):
+    mysql=connect()
+    cursor=mysql.cursor()
+    per_page = 20
+    cur = mysql.cursor()
+    istock="%"+stock+"%"
+    cur.execute("SELECT COUNT(*) FROM reports where company LIKE %s",(istock))
+    total_rows = cur.fetchone()['COUNT(*)']
+    print(total_rows)
+    total_pages = ceil(total_rows / per_page)
+    offset = (pageNo - 1) * per_page
+    cur.execute(f"SELECT * FROM reports where company LIKE  %s ORDER BY report_date DESC  LIMIT 20 OFFSET %s", (istock,offset) )
+    data = cur.fetchall()
+    cursor.close()
+    return data,total_pages
 
