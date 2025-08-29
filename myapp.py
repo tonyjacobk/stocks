@@ -5,7 +5,7 @@ from download_bhav_copy  import bhav_main
 import urllib.parse
 app = Flask(__name__)
 rows_per_page=20
-rows=[]
+rows,res=load_price()
 # MySQL configurations
 @app.route('/')
 @app.route('/<int:page>')
