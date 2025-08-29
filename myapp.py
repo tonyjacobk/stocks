@@ -10,7 +10,8 @@ rows,res=load_price()
 @app.route('/')
 @app.route('/<int:page>')
 def index(page=1):
-          
+    print(res)  
+    print(rows)
     data,total_pages=get_rows(page,20)
     get_price(data,rows)
     return render_template('index.html', data=data, page=page, total_pages=total_pages)
