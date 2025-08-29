@@ -158,8 +158,9 @@
 		    <th>Report Date</th>
                     <th>Company</th>
                     <th>Broker</th>
-                    <th>Recommendation</th>
+                    <th>Recomm.</th>
                     <th>Target</th>
+		    <th>Price</th>
                     <th>URL</th>
                 </tr>
                 {% for row in data %}
@@ -175,6 +176,7 @@
 		    </a> </td> 
                     <td>{{ row['recommendation'] }}</td>
                     <td>{{ row['target'] }}</td>
+		    <td>{{ row['price'] }}</td>
                     <td>
                         <a href="{{ row['URL'] }}" target="_blank">
                             <img src="{{ url_for('static', filename='icon.png') }}" alt="URL Icon" width="20">

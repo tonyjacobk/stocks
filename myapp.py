@@ -1,13 +1,17 @@
 from flask import Flask, render_template
 from aiven import get_rows,get_broker,get_stock,get_stock_partial
+from price import get_price,load_price
+from download_bhav_copy  import bhav_main
 import urllib.parse
 app = Flask(__name__)
 rows_per_page=20
+rows=[]
 # MySQL configurations
 @app.route('/')
 @app.route('/<int:page>')
 def index(page=1):
     data,total_pages=get_rows(page,20)
+    get_price(data,rows)
     return render_template('index.html', data=data, page=page, total_pages=total_pages)
 @app.route('/brk/<brok>')
 @app.route('/brk/<brok>/<int:page>')
@@ -38,6 +42,8 @@ def search_stock_partial(stock,page=1):
 
 
 if __name__ == '__main__':
+    bhav_main()
+    rows=load_price()
     app.run(host='0.0.0.0',debug=True)
 
 

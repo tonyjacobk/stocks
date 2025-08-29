@@ -12,12 +12,26 @@
     <h2>Report Table</h2>
     <table>
         <tr>
-            <th>Company</th><th>Broker</th><th>URL</th><th>Recommendation</th><th>Target</th>
+		<th>Company</th><th>Code</th><th>Broker</th><th>URL</th><th>Recommendation</th><th>Target</th>
             <th>Date</th><th>Site</th><th>Actions</th>
         </tr>
         {% for row in rows %}
         <tr>
-            <td><a href="{{ url_for('index', key='company', value=row.company) }}">{{ row.company }}</a></td>
+		<td>
+    <form method="post" action="{{ url_for('save') }}">
+        <input type="text" name="company" value="{{ row.company }}" size="15">
+        <input type="hidden" name="broker" value="{{ row.broker }}">
+        <input type="hidden" name="URL" value="{{ row.URL }}">
+        <input type="hidden" name="recommendation" value="{{ row.recommendation }}">
+        <input type="hidden" name="target" value="{{ row.target }}">
+        <input type="hidden" name="report_date" value="{{ row.report_date }}">
+        <input type="hidden" name="site" value="{{ row.site }}">
+	<input type="hidden" name="NSEKEY",value="{{ row.NSEKEY }}">
+        <button type="submit">Save</button>
+    </form>
+</td>
+
+	    <td> {{ row.NSEKEY }} </td>
             <td><a href="{{ url_for('index', key='broker', value=row.broker) }}">{{ row.broker }}</a></td>
             <td><a href="{{ row.URL }}" class="icon-link" target="_blank">🔗</a></td>
             <td>{{ row.recommendation }}</td>
