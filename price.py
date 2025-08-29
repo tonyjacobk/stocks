@@ -15,8 +15,14 @@ def get_price(data,rows):
 
 
 def load_price():
- with open(csv_file, mode='r') as file:
-        reader = csv.reader(file)
-        # Read all rows into a list for easy lookup
-        rows = list(reader)
-        return rows
+    try:
+        with open(csv_file, mode='r') as file:
+            reader = csv.reader(file)
+            rows = list(reader)  # Read all rows into a list
+            return rows,"succes"
+    except FileNotFoundError:
+        print(f"Error: The file '{csv_file}' does not exist.")
+        return [],"Failed"
+    except Exception as e:
+        print(f"Unexpected error while reading '{csv_file}': {e}")
+        return [],"failed"    

@@ -10,6 +10,7 @@ rows=[]
 @app.route('/')
 @app.route('/<int:page>')
 def index(page=1):
+    print("Result",result)        
     data,total_pages=get_rows(page,20)
     get_price(data,rows)
     return render_template('index.html', data=data, page=page, total_pages=total_pages)
@@ -43,7 +44,8 @@ def search_stock_partial(stock,page=1):
 
 if __name__ == '__main__':
     bhav_main()
-    rows=load_price()
+    app.logger.info("Hello world")
+    rows,result=load_price()
     app.run(host='0.0.0.0',debug=True)
 
 

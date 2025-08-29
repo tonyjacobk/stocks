@@ -138,7 +138,7 @@ def download_and_backup(url, headers):
             os.rename(download_path, backup_path)
         except OSError as e:
             print(f"Error: Failed to rename file: {e}")
-            return
+            return "Error in backup"
 
     # Step 2: Download the new file
     print(f"Downloading from '{url}' to '{download_path}'...")
@@ -177,8 +177,7 @@ def download_and_backup(url, headers):
 
 def bhav_main():
     if not is_file_older_than_last_13gmt():
-        print("New file")
-        return
+        return ("No new file down loaded")
     c=generate_appropriate_ma_date_string()
     found=False
     while not found:
@@ -188,4 +187,5 @@ def bhav_main():
        found=is_resource_found(url)
        if found:
            download_and_backup(url,headers)
+           return(url)
        c=generate_previous_day_ma_string(c)
