@@ -99,6 +99,11 @@
         .pagination span {
             margin: 0 8px;
         }
+	.report-date {
+    font-size: 0.9em;
+    color: #555;
+    text-align: right;
+}
     </style>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/my.css') }}">
 </head>
@@ -220,6 +225,9 @@
             {% endif %}
       {% endif %}	    
         </div>
+	 <div class="report-date">
+        {{ report_date }}
+    </div>
     </div>
 </body>
 </html>

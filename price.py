@@ -27,4 +27,10 @@ def load_price():
         return [],"Failed"
     except Exception as e:
         print(f"Unexpected error while reading '{csv_file}': {e}")
-        return [],"failed"    
+        return [],"failed"
+
+def get_date(rows):
+    for i in rows:
+        if len(i) != 0:
+            return (i[1])
+
