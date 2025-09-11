@@ -1,13 +1,12 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for,Blueprint 
 import pymysql
 from aiven import connect
-app = Flask(__name__)
-
+nse_bp=Blueprint("nse",__name__)
 
 def get_db_connection():
     return connect()
 
-@app.route('/')
+@nse_bp.route('/')
 def index():
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -18,7 +17,7 @@ def index():
     conn.close()
     return render_template('codeindex.html', codes=codes)
 
-@app.route('/add', methods=['GET', 'POST'])
+@nse_bp.route('/add', methods=['GET', 'POST'])
 def add():
     if request.method == 'POST':
         company = request.form['company']
@@ -29,10 +28,10 @@ def add():
         conn.commit()
         cursor.close()
         conn.close()
-        return redirect(url_for('index'))
+        return redirect(url_for('nse.index'))
     return render_template('add.html')
 
-@app.route('/edit/<code>', methods=['GET', 'POST'])
+@nse_bp.route('/edit/<code>', methods=['GET', 'POST'])
 def edit(code):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -43,14 +42,14 @@ def edit(code):
         conn.commit()
         cursor.close()
         conn.close()
-        return redirect(url_for('index'))
+        return redirect(url_for('nse.index'))
     cursor.execute("SELECT * FROM codes WHERE code = %s", (code,))
     company = cursor.fetchone()
     cursor.close()
     conn.close()
     return render_template('edit.html', company=company)
 
-@app.route('/delete/<code>')
+@nse_bp.route('/delete/<code>')
 def delete(code):
     conn = get_db_connection()
     cursor = conn.cursor()
@@ -58,7 +57,5 @@ def delete(code):
     conn.commit()
     cursor.close()
     conn.close()
-    return redirect(url_for('index'))
+    return redirect(url_for('nse.index'))
 
-if __name__ == '__main__':
-    app.run(host='0.0.0.0',debug=True)

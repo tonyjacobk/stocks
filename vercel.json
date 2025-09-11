@@ -2,20 +2,16 @@
  "version": 2,
  "builds": [
  {
- "src": "myapp.py",
+ "src": "bprint.py",
  "use": "@vercel/python"
  }
  ],
  "routes": [
  {
  "src": "/(.*)",
- "dest": "myapp.py"
+ "dest": "bprint.py"
  },
 
- {
- "src": "/brk(.*)",
- "dest": "myapp.py"
- }
  ]
  
  }

@@ -31,29 +31,35 @@
             overflow: hidden;
         }
 
-        .vertical-tabs {
-            width: 200px;
-            background-color: #fafafa;
-            border-right: 1px solid #ddd;
-            padding: 10px;
+.vertical-tabs {
+            /* Flexbox to handle layout and spacing */
+            display: flex;
+            flex-direction: column;
+            gap: 5px; /* Creates space between the buttons */
+            width: 150px; /* Sets a consistent width for the entire container */
         }
 
-        .vertical-tabs button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 5px;
-            background-color: #e7e7e7;
-            border: none;
+        .vertical-tabs button,
+        .vertical-tabs a {
+            /* Styles for both button and anchor tags */
+            display: block; /* Makes anchor tags behave like block-level elements */
+            flex: 1; /* Distributes width equally among all buttons */
+            padding: 10px 15px;
+            text-align: center;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
             cursor: pointer;
-            text-align: left;
-            font-size: 1em;
+            text-decoration: none;
+            color: black;
+            border-radius: 5px;
+            font-family: sans-serif;
+            font-size: 16px;
         }
 
-        .vertical-tabs button:hover {
+        .vertical-tabs button:hover,
+        .vertical-tabs a:hover {
             background-color: #ddd;
         }
-
         .table-container {
             flex: 1;
             padding: 10px;
@@ -104,6 +110,22 @@
     color: #555;
     text-align: right;
 }
+      .buttlink {
+    /* Basic button styling */
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-align: center;
+    text-decoration: none; /* Removes underline from the link */
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+}
+
+.buttlink:hover {
+    background-color: #0056b3;
+}
     </style>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/my.css') }}">
 </head>
@@ -141,7 +163,7 @@
       if (!value) return; // Ignore empty input
 
       // Build URL: use Flask's url_for base + encode input
-      const baseUrl = "{{ url_for('search_stock_partial', stock='') }}";
+      const baseUrl = "{{ url_for('report.search_stock_partial', stock='') }}";
       const finalUrl = baseUrl + encodeURIComponent(value);
       window.location.href = finalUrl;
     }
@@ -151,10 +173,8 @@
     <div class="content">
         <!-- Vertical Tabs -->
         <div class="vertical-tabs">
-            <button>All</button>
-            <button>Buy</button>
-            <button>Sell</button>
-            <button>Neutral</button>
+	  <a href="{{ url_for('nse.index') }}" class="buttlink">NSE Codes</a>
+	  <a href="{{ url_for('crud.index') }}" class="buttlink">Admin company</a>
         </div>
         <!-- Table -->
         <div class="table-container">
@@ -172,11 +192,11 @@
                 <tr>
 		    <td>{{ row['report_date'] }}	
                     <td>
-                      <a href="{{ url_for('search_stock',stock =row['company']|urlencode) }}">
+                      <a href="{{ url_for('report.search_stock',stock =row['company']|urlencode) }}">
             {{ row['company'] }}
 		    </td>
 		    <td>
-		    <a href="{{ url_for('search_broker',brok =row['broker']|urlencode) }}">
+		    <a href="{{ url_for('report.search_broker',brok =row['broker']|urlencode) }}">
             {{ row['broker'] }}
 		    </a> </td> 
                     <td>{{ row['recommendation'] }}</td>
@@ -199,16 +219,16 @@
     {% if broker is defined %}
 
             {% if page > 1 %}
-               <a href="{{ url_for('search_broker',brok =broker|urlencode, page=page-1) }}">Previous</a>
+               <a href="{{ url_for('report.search_broker',brok =broker|urlencode, page=page-1) }}">Previous</a>
             {% endif %}
             <span>Page {{ page }} of {{ total_pages }}</span>
             {% if page < total_pages %}
-	  <a href="{{ url_for('search_broker', brok =broker|urlencode,page=page+1) }}">Next</a>
+	  <a href="{{ url_for('report.search_broker', brok =broker|urlencode,page=page+1) }}">Next</a>
             {% endif %}
     {% elif company is defined %}
 
             {% if page > 1 %}
-               <a href="{{ url_for('search_stock',stock =company|urlencode, page=page-1) }}">Previous</a>
+               <a href="{{ url_for('report.search_stock',stock =company|urlencode, page=page-1) }}">Previous</a>
             {% endif %}
             <span>Page {{ page }} of {{ total_pages }}</span>
             {% if page < total_pages %}
@@ -217,11 +237,11 @@
 
     {% else %}
             {% if page > 1 %}
-                <a href="{{ url_for('index', page=page-1) }}">Previous</a>
+                <a href="{{ url_for('report.index', page=page-1) }}">Previous</a>
             {% endif %}
             <span>Page {{ page }} of {{ total_pages }}</span>
             {% if page < total_pages %}
-                <a href="{{ url_for('index', page=page+1) }}">Next</a>
+                <a href="{{ url_for('report.index', page=page+1) }}">Next</a>
             {% endif %}
       {% endif %}	    
         </div>

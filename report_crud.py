@@ -1,15 +1,14 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for,Blueprint
 from aiven import get_rows,get_broker,connect
 import urllib.parse
-
-app = Flask(__name__)
+crud_bp=Blueprint("crud",__name__)
 
 # Database configuration
 
 def get_connection():
   return connect()
-@app.route('/')
-@app.route('/filter/<key>/<value>')
+@crud_bp.route('/')
+@crud_bp.route('/filter/<key>/<value>')
 def index(key=None, value=None):
     conn = get_connection()
     cursor = conn.cursor()
@@ -24,7 +23,7 @@ def index(key=None, value=None):
     conn.close()
     return render_template('crudindex.html', rows=rows)
 
-@app.route('/delete', methods=['POST'])
+@crud_bp.route('/delete', methods=['POST'])
 def delete():
     company = request.form['company']
     broker = request.form['broker']
@@ -38,9 +37,9 @@ def delete():
     conn.commit()
     cursor.close()
     conn.close()
-    return redirect(url_for('index'))
+    return redirect(url_for('crud.index'))
 
-@app.route('/save', methods=['POST'])
+@crud_bp.route('/save', methods=['POST'])
 def save():
     data = (
         request.form['company'],
@@ -61,7 +60,5 @@ def save():
     conn.commit()
     cursor.close()
     conn.close()
-    return redirect(url_for('index'))
-if __name__ == '__main__':
-    app.run(host='0.0.0.0',debug=True)
+    return redirect(url_for('crud.index'))
 
