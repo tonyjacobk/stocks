@@ -1,7 +1,7 @@
 from flask import Flask
 from myapp import report_bp
-from nsecodes import nse_bp
-from report_crud import crud_bp
+#from nsecodes import nse_bp
+#from report_crud import crud_bp
 app = Flask(__name__)
 app.register_blueprint(report_bp)
 #app.register_blueprint(nse_bp,url_prefix="/code")
