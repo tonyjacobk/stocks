@@ -9,7 +9,7 @@
  "routes": [
  {
  "src": "/(.*)",
- "dest": "bprint.py"
+ "dest": "myapp.py"
  }
 
  ]
