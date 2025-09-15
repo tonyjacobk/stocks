@@ -10,7 +10,7 @@ report_bap=Blueprint("report",__name__)
 @report_bap.route('/')
 def test():
     rows,res=load_price()
-    report_date=get_date(rows
+    report_date=get_date(rows)
     print ("Will this print")
     return("Will this print")
 
