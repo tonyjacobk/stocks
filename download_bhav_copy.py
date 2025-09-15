@@ -123,9 +123,6 @@ def is_resource_found(url):
         return False
 
 
-import requests
-import os
-import shutil
 
 def download_and_backup(url, headers):
     download_path = '/tmp/price.csv'
