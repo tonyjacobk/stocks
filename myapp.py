@@ -10,6 +10,10 @@ report_bp=Blueprint("report",__name__)
 
 # MySQL configurations
 @report_bp.route('/')
+def test():
+    print ("Will this print")
+    return("Will this print")
+
 @report_bp.route('/<int:page>')
 def index(page=1):
     print(res)
