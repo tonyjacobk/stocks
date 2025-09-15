@@ -48,4 +48,12 @@ def bhavtest():
             return lines
     except FileNotFoundError:
         return "No file"
-
+@bhav_bp.route('/bhavlist')
+def list_tmp_files():
+    path = "/tmp"
+    try:
+        files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
+        print("Files in /tmp:")
+        return files
+    except Exception as e:
+      return (f"Error {e}")
