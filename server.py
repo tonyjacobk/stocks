@@ -35,4 +35,17 @@ def index():
       <input type=submit value=Upload>
     </form>
     '''
+@bhav_bp.route('/bhavtest')
+def bhavtest():
+    try:
+        with open('/tmp/price.csv', 'r', encoding='utf-8') as f:
+            lines = []
+            for _ in range(50):
+                line = f.readline()
+                if not line:
+                    break
+                lines.append(line.rstrip('\n'))
+            return lines
+    except FileNotFoundError:
+        return "No file"
 
