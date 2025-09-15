@@ -173,8 +173,8 @@
     <div class="content">
         <!-- Vertical Tabs -->
         <div class="vertical-tabs">
-	  <a href="{{ url_for('report.index') }}" class="buttlink">NSE Codes</a>
-	  <a href="{{ url_for('report.index') }}" class="buttlink">Admin company</a>
+	  <a href="{{ url_for('nse.index') }}" class="buttlink">NSE Codes</a>
+	  <a href="{{ url_for('crud.index') }}" class="buttlink">Admin company</a>
         </div>
         <!-- Table -->
         <div class="table-container">
@@ -232,7 +232,7 @@
             {% endif %}
             <span>Page {{ page }} of {{ total_pages }}</span>
             {% if page < total_pages %}
-                <a href="{{ url_for('search_stock', stock =company|urlencode,page=page+1) }}">Next</a>
+                <a href="{{ url_for('report.search_stock', stock =company|urlencode,page=page+1) }}">Next</a>
             {% endif %}
 
     {% else %}

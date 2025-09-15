@@ -16,7 +16,6 @@ def get_price(data,rows):
 
 
 def load_price():
-    bhav_main()
     try:
         with open(csv_file, mode='r') as file:
             reader = csv.reader(file)
