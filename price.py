@@ -1,6 +1,5 @@
 import csv
 from aiven import get_rows,get_broker,get_stock,get_stock_partial
-from download_bhav_copy import bhav_main
 csv_file="/tmp/price.csv"
 def get_price(data,rows):
 

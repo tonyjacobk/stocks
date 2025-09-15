@@ -186,3 +186,4 @@ def bhav_main():
            download_and_backup(url,headers)
            return(url)
        c=generate_previous_day_ma_string(c)
+bhav_main()
