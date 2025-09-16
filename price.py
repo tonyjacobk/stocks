@@ -1,6 +1,6 @@
 import csv
 from aiven import get_rows,get_broker,get_stock,get_stock_partial
-csv_file="/tmp/price.csv"
+csv_file="price.csv"
 def get_price(data,rows):
 
     for var in data:
