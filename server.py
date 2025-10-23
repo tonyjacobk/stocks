@@ -38,7 +38,7 @@ def index():
 @bhav_bp.route('/bhavtest')
 def bhavtest():
     try:
-        with open('/tmp/price.csv', 'r', encoding='utf-8') as f:
+        with open('price.csv', 'r', encoding='utf-8') as f:
             lines = []
             for _ in range(50):
                 line = f.readline()
@@ -50,7 +50,7 @@ def bhavtest():
         return "No file"
 @bhav_bp.route('/bhavlist')
 def list_tmp_files():
-    path = "/tmp"
+    path = "."
     try:
         files = [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
         print("Files in /tmp:")

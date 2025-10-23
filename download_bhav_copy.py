@@ -125,8 +125,8 @@ def is_resource_found(url):
 
 
 def download_and_backup(url, headers):
-    download_path = '/tmp/price.csv'
-    backup_path = '/tmp/price.bak'
+    download_path = 'price.csv'
+    backup_path = 'price.bak'
 
     # Step 1: Backup existing file if it exists
     if os.path.exists(download_path):
@@ -174,6 +174,7 @@ def download_and_backup(url, headers):
 
 def bhav_main():
     if not is_file_older_than_last_13gmt():
+        print("Existing file is upto date")
         return ("No new file down loaded")
     c=generate_appropriate_ma_date_string()
     found=False
@@ -184,6 +185,7 @@ def bhav_main():
        found=is_resource_found(url)
        if found:
            download_and_backup(url,headers)
-           return(url)
+           break
        c=generate_previous_day_ma_string(c)
+    upload_copy()   
 bhav_main()
