@@ -187,5 +187,4 @@ def bhav_main():
            download_and_backup(url,headers)
            break
        c=generate_previous_day_ma_string(c)
-    upload_copy()   
 bhav_main()

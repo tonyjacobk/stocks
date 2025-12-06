@@ -3,15 +3,15 @@ from aiven import get_rows,get_broker,connect
 import urllib.parse
 import math
 from megclass import MegaMan
-crud_bp=Blueprint("crud",__name__)
+sector_bp=Blueprint("sector",__name__)
 
 # Database configuration
 
 def get_connection():
   return connect()
-@crud_bp.route('/')
-@crud_bp.route('/<int:page>')
-@crud_bp.route('/filter/<key>/<value>/<int:page>')
+@sector_bp.route('/')
+@sector_bp.route('/<int:page>')
+@sector_bp.route('/filter/<key>/<value>/<int:page>')
 def index(key=None, value=None, page=1):
     conn = get_connection()
     cursor = conn.cursor()
@@ -20,11 +20,11 @@ def index(key=None, value=None, page=1):
     offset = (page - 1) * page_size
 
     # Get search parameters
-    search_by_code = request.args.get('search_by_code', '')
+    search_by_broker = request.args.get('search_by_broker', '')
     search_by_company = request.args.get('search_by_company', '')
 
     # Base query
-    base_query = "FROM reports"
+    base_query = "FROM gen_reports"
     conditions = []
     params = []
 
@@ -32,8 +32,8 @@ def index(key=None, value=None, page=1):
         conditions.append(f"{key} = %s")
         params.append(value)
 
-    if search_by_code:
-        conditions.append("NSEKEY LIKE %s")
+    if search_by_broker:
+        conditions.append("broker LIKE %s")
         params.append(f"%{search_by_code}%")
 
     if search_by_company:
@@ -57,63 +57,73 @@ def index(key=None, value=None, page=1):
     cursor.close()
     conn.close()
 
-    return render_template('crudindex.html',
+    return render_template('sectorindex.html',
                            rows=rows,
                            page=page,
                            total_pages=total_pages,
                            key=key,
                            value=value,
-                           search_by_code=search_by_code,
+                           search_by_broker=search_by_broker,
                            search_by_company=search_by_company)
 
-@crud_bp.route('/delete', methods=['POST'])
+@sector_bp.route('/delete', methods=['POST'])
 def delete():
-    company = request.form['company']
+    print ("In delete")
+    company = request.form["company"]
     broker = request.form['broker']
-    report_date = request.form['report_date']
-    url=request.form['URL']
+    report_date = request.form['date']
+    URL=request.form["URL"]
     conn = get_connection()
     cursor = conn.cursor()
+    print(company,broker,report_date)
+    print(URL)
     cursor.execute("""
-        SELECT site  FROM reports
-        WHERE company=%s AND broker=%s AND report_date=%s
-        """,(company, broker, report_date))
-    results=cursor.fetchall()
-    if results[0]['site'] == 'tel':
-      print('url')
-      MegaMan.delete_url(url)      
-    print(results)
-    return redirect(url_for('crud.index'))
-    cursor.execute(""":
-        DELETE FROM reports 
-        WHERE company=%s AND broker=%s AND report_date=%s
-    """, (company, broker, report_date))
+        DELETE FROM gen_reports 
+        WHERE company=%s  AND report_date=%s
+    """, (company, report_date))
+    print(URL)
+    MegaMan.delete_url(URL)
     conn.commit()
     cursor.close()
     conn.close()
-    return redirect(url_for('crud.index'))
+    return redirect(url_for('sector.index'))
 
-@crud_bp.route('/save', methods=['POST'])
+@sector_bp.route('/save', methods=['POST'])
 def save():
     data = (
         request.form['company'],
         request.form['broker'],
         request.form['URL'],
-        request.form['recommendation'],
-        request.form['target'],
-        request.form['report_date'],
+        request.form['date'],
         request.form['site'],
-        request.form['code']
     )
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""
         REPLACE INTO reports 
-        (company, broker, URL, recommendation, target, report_date, site,NSEKEY) 
-        VALUES (%s, %s, %s, %s, %s, %s, %s,%s)
+        (company, broker, URL,  report_date, site) 
+        VALUES (%s, %s, %s, %s, %s)
     """, data)
     conn.commit()
     cursor.close()
     conn.close()
-    return redirect(url_for('crud.index'))
+    return redirect(url_for('sector.index'))
+@sector_bp.route('/move', methods=['POST'])
+def move():
+    print ("In Move")
+    company = request.form['company']
+    broker = request.form['broker']
+    report_date = request.form['date']
+    URL=request.form["URL"]
+    conn = get_connection()
+    cursor = conn.cursor()
+    print(company,broker,report_date)
+    cursor.execute("""
+        UPDATE  gen_reports SET Site = %s
+        WHERE company=%s  AND report_date=%s
+    """, ("mv",company, report_date))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return redirect(url_for('sector.index'))
 
