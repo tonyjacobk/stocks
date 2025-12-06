@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for,Blueprint
 from aiven import get_rows,get_broker,connect
 import urllib.parse
 import math
-from megclass import MegaMan
+#from megclass import MegaMan
 crud_bp=Blueprint("crud",__name__)
 
 # Database configuration
@@ -81,7 +81,7 @@ def delete():
     results=cursor.fetchall()
     if results[0]['site'] == 'tel':
       print('url')
-      MegaMan.delete_url(url)      
+   #   MegaMan.delete_url(url)      
     print(results)
     return redirect(url_for('crud.index'))
     cursor.execute(""":

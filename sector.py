@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for,Blueprint
 from aiven import get_rows,get_broker,connect
 import urllib.parse
 import math
-from megclass import MegaMan
+#from megclass import MegaMan
 sector_bp=Blueprint("sector",__name__)
 
 # Database configuration
@@ -82,7 +82,7 @@ def delete():
         WHERE company=%s  AND report_date=%s
     """, (company, report_date))
     print(URL)
-    MegaMan.delete_url(URL)
+    #MegaMan.delete_url(URL)
     conn.commit()
     cursor.close()
     conn.close()
