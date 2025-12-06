@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for,Blueprint
 from aiven import get_rows,get_broker,connect
 import urllib.parse
 import math
+from redis_man import res
 #from megclass import MegaMan
 sector_bp=Blueprint("sector",__name__)
 
@@ -77,12 +78,12 @@ def delete():
     cursor = conn.cursor()
     print(company,broker,report_date)
     print(URL)
+    res.set_a_value(URL)
     cursor.execute("""
         DELETE FROM gen_reports 
         WHERE company=%s  AND report_date=%s
     """, (company, report_date))
     print(URL)
-    #MegaMan.delete_url(URL)
     conn.commit()
     cursor.close()
     conn.close()
