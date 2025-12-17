@@ -19,7 +19,10 @@ class redisman:
   all_keys = []
   for key in self.r.scan_iter():
     all_keys.append(key)
-
-  print(f"All keys in Redis: {all_keys}")
-
+  return all_keys
+ def delete_a_key(self,key):
+    cnt=self.r.delete(key)
+    if cnt==1:
+        return 0
+    return 1
 res=redisman()
