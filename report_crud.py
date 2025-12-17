@@ -80,11 +80,8 @@ def delete():
         """,(company, broker, report_date))
     results=cursor.fetchall()
     if results[0]['site'] == 'tel':
-      print('url')
-   #   MegaMan.delete_url(url)      
-    print(results)
-    return redirect(url_for('crud.index'))
-    cursor.execute(""":
+     res.set_a_value(url)
+    cursor.execute("""
         DELETE FROM reports 
         WHERE company=%s AND broker=%s AND report_date=%s
     """, (company, broker, report_date))
