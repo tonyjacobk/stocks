@@ -68,23 +68,21 @@ def index(key=None, value=None, page=1):
                            search_by_company=search_by_company)
 
 @sector_bp.route('/delete', methods=['POST'])
-def delete():
+def delete_bulk():
     print ("In delete")
-    company = request.form["company"]
-    broker = request.form['broker']
-    report_date = request.form['date']
-    URL=request.form["URL"]
+    print (request.form)
     conn = get_connection()
     cursor = conn.cursor()
-    print(company,broker,report_date)
-    print(URL)
-    res.set_a_value(URL)
-    cursor.execute("""
+    del_list=request.form.getlist('delete_rows')
+    for i in del_list:
+     p=i.split("||")
+     res.set_a_value(p[3])
+
+     cursor.execute("""
         DELETE FROM gen_reports 
         WHERE company=%s  AND report_date=%s
-    """, (company, report_date))
-    print(URL)
-    conn.commit()
+    """, (p[0],p[2]))
+     conn.commit()
     cursor.close()
     conn.close()
     return redirect(url_for('sector.index'))
