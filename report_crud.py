@@ -15,6 +15,7 @@ def get_connection():
 @crud_bp.route('/<int:page>')
 @crud_bp.route('/filter/<key>/<value>/<int:page>')
 def index(key=None, value=None, page=1):
+    print(key,value,page)
     conn = get_connection()
     cursor = conn.cursor()
 
@@ -26,7 +27,8 @@ def index(key=None, value=None, page=1):
     search_by_company = request.args.get('search_by_company', '')
 
     # Base query
-    base_query = "FROM reports"
+    base_query = "FROM reports "
+    sort_query= "ORDER BY report_date DESC "
     conditions = []
     params = []
 
@@ -46,12 +48,16 @@ def index(key=None, value=None, page=1):
 
     # Get total number of rows for pagination
     count_query = "SELECT COUNT(*) " + base_query + where_clause
+    print(count_query)
     cursor.execute(count_query, tuple(params))
     total_rows = cursor.fetchone()['COUNT(*)']
     total_pages = math.ceil(total_rows / page_size)
 
     # Get data for the current page
     data_query = "SELECT * " + base_query + where_clause + f" LIMIT %s OFFSET %s"
+    if not where_clause:
+         data_query = "SELECT * " + base_query + sort_query+where_clause + f" LIMIT %s OFFSET %s"
+    print(data_query)
     params.extend([page_size, offset])
     cursor.execute(data_query, tuple(params))
 
@@ -70,6 +76,14 @@ def index(key=None, value=None, page=1):
 
 @crud_bp.route('/delete', methods=['POST'])
 def delete():
+    print(request.form)
+    code=request.form.get('search_by_code')
+    comp=request.form.get('search_by_company')
+    pag=request.form.get('page')
+    if not pag:
+        pag=1
+    print(code,comp,pag)
+    search_params={'search_by_code':code,'search_by_company':comp}
     company = request.form['company']
     broker = request.form['broker']
     report_date = request.form['report_date']
@@ -86,14 +100,19 @@ def delete():
     cursor.execute("""
         DELETE FROM reports 
         WHERE company=%s AND broker=%s AND report_date=%s
-    """, (company, broker, report_date))
+   """, (company, broker, report_date))
     conn.commit()
     cursor.close()
     conn.close()
-    return redirect(url_for('crud.index'))
+    search_params={'search_by_code':code,'search_by_company':comp}
+    return redirect(url_for('crud.index',page=pag,**search_params))
 
 @crud_bp.route('/save', methods=['POST'])
 def save():
+    code=request.form.get('search_by_code')
+    comp=request.form.get('search_by_company')
+    pag=request.form.get('page')
+
     data = (
         request.form['company'],
         request.form['broker'],
@@ -114,5 +133,6 @@ def save():
     conn.commit()
     cursor.close()
     conn.close()
-    return redirect(url_for('crud.index'))
+    search_params={'search_by_code':code,'search_by_company':comp}
+    return redirect(url_for('crud.index',page=pag,**search_params))
 

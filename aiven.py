@@ -63,12 +63,13 @@ def get_broker(pageNo,per_page,broker):
     mysql=connect()
     cursor=mysql.cursor()
     per_page = 20
+    ibrk="%"+broker+"%"
     cur = mysql.cursor()
-    cur.execute("SELECT COUNT(*) FROM reports where broker= %s",(broker))
+    cur.execute("SELECT COUNT(*) FROM reports where broker LIKE %s",(ibrk))
     total_rows = cur.fetchone()['COUNT(*)']
     total_pages = ceil(total_rows / per_page)
     offset = (pageNo - 1) * per_page
-    cur.execute(f"SELECT * FROM reports where broker = %s ORDER BY report_date DESC  LIMIT 20 OFFSET %s", (broker,offset) )
+    cur.execute(f"SELECT * FROM reports where broker LIKE %s ORDER BY report_date DESC  LIMIT 20 OFFSET %s", (ibrk,offset) )
     data = cur.fetchall()
     cursor.close()
     return data,total_pages

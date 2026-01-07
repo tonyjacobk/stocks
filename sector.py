@@ -25,7 +25,8 @@ def index(key=None, value=None, page=1):
     search_by_company = request.args.get('search_by_company', '')
 
     # Base query
-    base_query = "FROM gen_reports"
+    base_query = "FROM gen_reports "
+    sort_query= "ORDER BY report_date DESC "
     conditions = []
     params = []
 
@@ -51,6 +52,9 @@ def index(key=None, value=None, page=1):
 
     # Get data for the current page
     data_query = "SELECT * " + base_query + where_clause + f" LIMIT %s OFFSET %s"
+    if not where_clause:
+         data_query = "SELECT * " + base_query + sort_query+where_clause + f" LIMIT %s OFFSET %s"
+    print(data_query)
     params.extend([page_size, offset])
     cursor.execute(data_query, tuple(params))
 

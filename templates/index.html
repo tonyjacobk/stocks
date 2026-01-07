@@ -137,12 +137,16 @@
       <input
         type="text"
         id="stockSearch"
-        placeholder="Search stock..."
+        placeholder="Search stock/broker .."
         onkeypress="handleKeyPress(event)"
       />
       <button id="searchButton" onclick="submitSearch()">
-        Search
+        Search Company
       </button>
+      <button id="searchbrokerButton" onclick="submitBrkSearch()">
+        Search Broker
+      </button>
+
     </div>
 
     </div>
@@ -167,6 +171,18 @@
       const finalUrl = baseUrl + encodeURIComponent(value);
       window.location.href = finalUrl;
     }
+   function submitBrkSearch() {
+      const input = document.getElementById('stockSearch');
+      const value = input.value.trim();
+
+      if (!value) return; // Ignore empty input
+
+      // Build URL: use Flask's url_for base + encode input
+      const baseUrl = "{{ url_for('report.search_broker', brok='') }}";
+      const finalUrl = baseUrl + encodeURIComponent(value);
+      window.location.href = finalUrl;
+    }
+
   </script>
 
     <!-- Middle Section -->

@@ -36,7 +36,15 @@
         {% for row in rows %}
         <tr>
             <form method="post">
+		<!-- Forward all current query parameters (search_by_code, search_by_company, etc.) -->
+              {% for key, value in request.args.items() %}
+                <input type="hidden" name="{{ key }}" value="{{ value }}">
+              {% endfor %}
+
+    <!-- Forward the page number from the URL path (/crud/1 → page=1) -->
+                <input type="hidden" name="page" value="{{ page }}">
                 <td><input type="text" name="company" value="{{ row.company }}" size="15"></td>
+
                 <td><input type="text" name="code" value="{{ row.NSEKEY }}" size="10"></td>
                 <td><input type="text" name="broker" value="{{ row.broker }}" size="10"></td>
                 <td><input type="text" name="URL" value="{{ row.URL }}" size="15"></td>
