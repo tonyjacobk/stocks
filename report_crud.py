@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for,Blueprint
 from aiven import get_rows,get_broker,connect
 import urllib.parse
 import math
+from redis_man import res
+
 #from megclass import MegaMan
 crud_bp=Blueprint("crud",__name__)
 
