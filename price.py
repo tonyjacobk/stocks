@@ -1,7 +1,9 @@
 import csv
+import json
 from aiven import get_rows,get_broker,get_stock,get_stock_partial
 csv_file="price.csv"
-def get_price(data,rows):
+csv_bse="bse.csv"
+def get_price2(data,rows):
 
     for var in data:
         found = False
@@ -12,9 +14,11 @@ def get_price(data,rows):
                 break
         if not found:
             var['price'] = " " 
+def get_price(data,row_dict):
+    for row in data:
+        row['price']=row_dict.get(row['NSEKEY'],"")
 
-
-def load_price():
+def load_price2():
     try:
         with open(csv_file, mode='r') as file:
             reader = csv.reader(file)
@@ -26,6 +30,10 @@ def load_price():
     except Exception as e:
         print(f"Unexpected error while reading '{csv_file}': {e}")
         return [],"failed"
+
+def load_price(filename="dictprice.json"):
+  with open(filename, "r", encoding="utf-8") as f:
+   return json.load(f)
 
 def get_date(rows):
     for i in rows:
