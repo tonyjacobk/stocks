@@ -3,6 +3,7 @@ from datetime import datetime
 import logging
 logger = logging.getLogger(__name__)
 from math import ceil
+from datetime import datetime, timedelta
 
 timeout = 10
 def connect():
@@ -101,4 +102,23 @@ def get_stock_partial(pageNo,per_page,stock):
     data = cur.fetchall()
     cursor.close()
     return data,total_pages
+def is_present(conn, comp, brok, date_str):
+    base_date = datetime.strptime(date_str, "%Y-%m-%d")
+    start_date = (base_date - timedelta(days=10)).date()
+    end_date = (base_date + timedelta(days=10)).date()
 
+    query = """
+        SELECT *
+        FROM reports
+        WHERE company = %s
+          AND broker = %s
+          AND report_date BETWEEN %s  AND %s
+    """
+
+    cur = conn.cursor()
+    cur.execute(query, (comp, brok, start_date, end_date))
+    rows = cur.fetchall()
+
+    if rows:
+        return True, rows
+    return False, []
