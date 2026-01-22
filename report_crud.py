@@ -45,7 +45,7 @@ def index(key=None, value=None, page=1):
         params.append(f"%{search_by_company}%")
 
     where_clause = " WHERE " + " AND ".join(conditions) if conditions else ""
-
+    print("Where",where_clause)
     # Get total number of rows for pagination
     count_query = "SELECT COUNT(*) " + base_query + where_clause
     print(count_query)
@@ -54,7 +54,7 @@ def index(key=None, value=None, page=1):
     total_pages = math.ceil(total_rows / page_size)
 
     # Get data for the current page
-    data_query = "SELECT * " + base_query + where_clause + f" LIMIT %s OFFSET %s"
+    data_query = "SELECT * " + base_query + where_clause +sort_query+ f" LIMIT %s OFFSET %s"
     if not where_clause:
          data_query = "SELECT * " + base_query + sort_query+where_clause + f" LIMIT %s OFFSET %s"
     print(data_query)

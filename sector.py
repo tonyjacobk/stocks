@@ -1,11 +1,12 @@
 from flask import Flask, render_template, request, redirect, url_for,Blueprint
-from aiven import get_rows,get_broker,connect
+from aiven import get_rows,get_broker,connect,is_present
 import urllib.parse
 import math
 from redis_man import res
+from controls import brokers
 #from megclass import MegaMan
 sector_bp=Blueprint("sector",__name__)
-
+unique_sorted_brokers = sorted(set(brokers.values()))
 # Database configuration
 
 def get_connection():
@@ -36,14 +37,13 @@ def index(key=None, value=None, page=1):
 
     if search_by_broker:
         conditions.append("broker LIKE %s")
-        params.append(f"%{search_by_code}%")
+        params.append(f"%{search_by_broker}%")
 
     if search_by_company:
         conditions.append("company LIKE %s")
         params.append(f"%{search_by_company}%")
 
     where_clause = " WHERE " + " AND ".join(conditions) if conditions else ""
-
     # Get total number of rows for pagination
     count_query = "SELECT COUNT(*) " + base_query + where_clause
     cursor.execute(count_query, tuple(params))
@@ -51,9 +51,9 @@ def index(key=None, value=None, page=1):
     total_pages = math.ceil(total_rows / page_size)
 
     # Get data for the current page
-    data_query = "SELECT * " + base_query + where_clause + f" LIMIT %s OFFSET %s"
-    if not where_clause:
-         data_query = "SELECT * " + base_query + sort_query+where_clause + f" LIMIT %s OFFSET %s"
+    data_query = "SELECT * " + base_query + where_clause + f" ORDER BY report_date DESC LIMIT %s OFFSET %s"
+    if  where_clause:
+         data_query = "SELECT * " + base_query + where_clause + sort_query+f" LIMIT %s OFFSET %s"
     print(data_query)
     params.extend([page_size, offset])
     cursor.execute(data_query, tuple(params))
@@ -68,6 +68,7 @@ def index(key=None, value=None, page=1):
                            total_pages=total_pages,
                            key=key,
                            value=value,
+                           brokers=unique_sorted_brokers,
                            search_by_broker=search_by_broker,
                            search_by_company=search_by_company)
 
@@ -118,13 +119,29 @@ def move():
     broker = request.form['broker']
     report_date = request.form['date']
     URL=request.form["URL"]
+    recomm=request.form['recommendation']
+    target=request.form['target']
+    site=request.form['site']
+    olddate=request.form['olddate']
+    fname=request.form['filename']
+    nsekey=request.form['nsekey']
+    print(request.form)
     conn = get_connection()
     cursor = conn.cursor()
+
     print(company,broker,report_date)
+    stat,reps=is_present(conn,company,broker,report_date)
+    if not stat:
+     cursor.execute("""
+       INSERT INTO reports
+        (company, broker, URL,  report_date,recommendation,target ,site,NSEKEY)
+        VALUES (%s, %s, %s, %s, %s,%s,%s,%s
+    """, (company,broker,URL,report_date,recomm,target,site,nsekey))
     cursor.execute("""
-        UPDATE  gen_reports SET Site = %s
+        DELETE FROM gen_reports
         WHERE company=%s  AND report_date=%s
-    """, ("mv",company, report_date))
+    """, (fname,olddate))
+
     conn.commit()
     cursor.close()
     conn.close()

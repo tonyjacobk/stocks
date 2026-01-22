@@ -81,20 +81,119 @@
 
         <td>{{ row.report_date }}</td>
         <td>{{ row.site }}</td>
-
         <td>
-            <form action="{{ url_for('sector.move') }}" method="post">
-                <input type="hidden" name="company" value="{{ row.company }}">
-                <input type="hidden" name="broker" value="{{ row.broker }}">
-                <input type="hidden" name="date" value="{{ row.report_date }}">
-                <input type="hidden" name="URL" value="{{ row.URL }}">
-                <button type="submit">Move</button>
-            </form>
-        </td>
+         <button type="button"
+            onclick="openMoveModal('{{ row.company }}',
+                                   '{{ row.broker }}',
+                                   '{{ row.report_date }}',
+	                           '{{ row.site }}',
+                                   '{{ row.URL }}')">
+         Move
+        </button>
+</td>
+
     </tr>
     {% endfor %}
 </table>
 </form>
+<!-- Modal (hidden by default) -->
+<!-- Modal (hidden by default) -->
+<div id="moveModal" style="display:none; position:fixed; top:20%; left:30%; 
+     background:#fff; border:1px solid #000; padding:20px; z-index:1000; width:400px;">
+    <h3>Move Report</h3>
+    <form id="moveForm" method="post" action="{{ url_for('sector.move') }}">
+        <div class="form-row">
+            <label for="modalCompany">Company Name:</label>
+            <input type="text" name="company" id="modalCompany">
+        </div>
+  
+	<div class="form-row">
+	<label for="modalnsekey">NSE Key:</label>	
+            <input type="text" name="nsekey" id="modalnsekey">
+        </div>
+
+        <div class="form-row">
+            <label for="modalBroker">Broker Name:</label>
+	    <select name="broker" id="modalBroker">
+	     {% for broker in brokers %} <option value="{{ broker }}">{{ broker }}</option> {% endfor %}
+	    </select>
+        </div>
+
+        <div class="form-row">
+            <label for="modalDate">Date:</label>
+            <input type="date" name="date" id="modalDate">
+        </div>
+
+        <div class="form-row">
+            <label for="modalURL">URL:</label>
+            <input type="text" name="URL" id="modalURL">
+        </div>
+
+        <div class="form-row">
+            <label for="modalRecommendation">Recommendation:</label>
+            <input type="text" name="recommendation" id="modalRecommendation">
+        </div>
+
+        <div class="form-row">
+            <label for="modalTarget">Target:</label>
+            <input type="text" name="target" id="modalTarget">
+        </div>
+         <div class="form-row">
+            <input type="hidden" name="site" id="modalsite">
+	    <input type="hidden" name="filename" id="fname">
+            <input type="hidden" name="olddate" id="olddate">
+        </div>
+
+        <div class="form-actions">
+            <button type="submit">Save</button>
+            <button type="button" onclick="closeModal()">Ignore</button>
+        </div>
+    </form>
+</div>
+
+<style>
+    .form-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+    }
+    .form-row label {
+        width: 40%;
+        text-align: right;
+        margin-right: 10px;
+    }
+    .form-row input {
+        width: 55%;
+        padding: 5px;
+    }
+    .form-actions {
+        text-align: center;
+        margin-top: 15px;
+    }
+    .form-actions button {
+        margin: 0 10px;
+        padding: 6px 12px;
+    }
+</style>
+
+<script>
+function openMoveModal(company, broker, date, site,url) {
+    // Populate inputs with values
+    document.getElementById('modalCompany').value = company;
+    document.getElementById('modalBroker').value = broker;
+    document.getElementById('modalDate').value = date;
+    document.getElementById('modalURL').value = url;
+    document.getElementById('modalsite').value = site;
+    document.getElementById('fname').value = company;
+    document.getElementById('olddate').value = date;
+    // Show modal
+    document.getElementById('moveModal').style.display = 'block';
+}
+
+function closeModal() {
+    document.getElementById('moveModal').style.display = 'none';
+}
+</script>
 
 <!-- PAGINATION -->
 <div>
