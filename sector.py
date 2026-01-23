@@ -135,7 +135,7 @@ def move():
      cursor.execute("""
        INSERT INTO reports
         (company, broker, URL,  report_date,recommendation,target ,site,NSEKEY)
-        VALUES (%s, %s, %s, %s, %s,%s,%s,%s
+        VALUES (%s, %s, %s, %s, %s,%s,%s,%s)
     """, (company,broker,URL,report_date,recomm,target,site,nsekey))
     cursor.execute("""
         DELETE FROM gen_reports
