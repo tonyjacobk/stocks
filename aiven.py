@@ -122,3 +122,15 @@ def is_present(conn, comp, brok, date_str):
     if rows:
         return True, rows
     return False, []
+def add_company(company,broker,URL,report_date,recomm,target,site,nsekey):
+    mysql=connect()
+    cursor=mysql.cursor()
+    cursor.execute("""
+       INSERT INTO reports
+        (company, broker, URL,  report_date,recommendation,target ,site,NSEKEY)
+        VALUES (%s, %s, %s, %s, %s,%s,%s,%s)
+    """, (company,broker,URL,report_date,recomm,target,site,nsekey))
+
+    mysql.commit()
+    cursor.close()
+    mysql.close()

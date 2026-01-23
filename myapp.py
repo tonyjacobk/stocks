@@ -1,19 +1,21 @@
-from flask import Flask, render_template,Blueprint
-from aiven import get_rows,get_broker,get_stock,get_stock_partial
+from flask import Flask, render_template,Blueprint,request,redirect,url_for
+from aiven import get_rows,get_broker,get_stock,get_stock_partial,add_company
 from price import get_price,load_price,get_date
 import urllib.parse
+from controls import brokers
+
 rows_per_page=20
 row_dict=load_price()
 report_date=row_dict["Bhavdate"]
 report_bp=Blueprint("report",__name__)
-
+unique_sorted_brokers = sorted(set(brokers.values()))
 # MySQL configurations
 @report_bp.route('/')
 @report_bp.route('/<int:page>')
 def index(page=1):
     data,total_pages=get_rows(page,20)
     get_price(data,row_dict)
-    return render_template('index.html', data=data, page=page, total_pages=total_pages,report_date=report_date)
+    return render_template('index.html', data=data, page=page, total_pages=total_pages,report_date=report_date, brokers=unique_sorted_brokers)
 @report_bp.route('/brk/<brok>')
 @report_bp.route('/brk/<brok>/<int:page>')
 def search_broker(brok,page=1):
@@ -42,6 +44,20 @@ def search_stock_partial(stock,page=1):
     get_price(data,row_dict)
     return render_template('index.html', data=data, page=page, total_pages=total_pages,company=stock,report_date=report_date)
 
+@report_bp.route('/addcomp', methods=['POST'])
+def addcomp():
+    company = request.form['company']
+    broker = request.form['broker']
+    report_date = request.form['date']
+    URL=request.form["URL"]
+    recomm=request.form['recommendation']
+    target=request.form['target']
+    site="manu"
+    fname=request.form['filename']
+    nsekey=request.form['nsekey']
+    print(request.form)
+    add_company(company,broker,URL,report_date,recomm,target,site,nsekey)
+    return redirect(url_for('report.index'))
 
 
 
