@@ -72,7 +72,7 @@
         <td>{{ row.broker }}</td>
 
         <td>
-            <a href="{{ row.URL }}" target="_blank">
+            <a href="{{ url_for('sector.view_pdf',myurl =row.URL) }}" target="_blank">
                 <img src="{{ url_for('static', filename='icon.png') }}"
                      width="20"
                      alt="Open">

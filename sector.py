@@ -1,10 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for,Blueprint
+from flask import Flask, render_template, request, redirect, url_for,Blueprint,send_file
 from aiven import get_rows,get_broker,connect,is_present
 import urllib.parse
 import math
 from redis_man import res
 from controls import brokers
-#from megclass import MegaMan
+from megclass import MegaMan
 sector_bp=Blueprint("sector",__name__)
 unique_sorted_brokers = sorted(set(brokers.values()))
 # Database configuration
@@ -146,4 +146,12 @@ def move():
     cursor.close()
     conn.close()
     return redirect(url_for('sector.index'))
+@sector_bp.route('/showpdf/<path:myurl>',methods=['GET'])
+def view_pdf(myurl):
+  MegaMan.mega.download_url(myurl,dest_filename="sample.pdf")
+  return send_file(
+        'sample.pdf',
+        mimetype='application/pdf',
+        as_attachment=False  # Important: allows inline viewing
+    )
 
