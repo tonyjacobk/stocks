@@ -81,7 +81,8 @@ def delete_bulk():
     del_list=request.form.getlist('delete_rows')
     for i in del_list:
      p=i.split("||")
-     res.set_a_value(p[3])
+     if "mega.co.nz" in p[3]: 
+       res.set_a_value(p[3])
 
      cursor.execute("""
         DELETE FROM gen_reports 
