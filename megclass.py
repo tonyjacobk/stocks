@@ -100,7 +100,7 @@ class MegaManager:
      else:
           print("Could not find file Name from this URL ",myurl)
           logger.info("Could not get fileName for URL %s:",myurl)
-          return -1
+          return -2
 
 
     def get_file_Name_from_url(self,URL):

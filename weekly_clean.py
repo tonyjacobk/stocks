@@ -11,9 +11,14 @@ def initialize_logger ():
 def delete_all_records():
  del_list=res.get_all_keys()
  for key in del_list:
-      ret= MegaMan.delete_url(key)
-      if ret ==1:
-        res.delete_a_key(key)
+   print(key)
+   if 'mega.co.nz' not in key:
+       res.delete_a_key(key)
+       continue
+   ret= MegaMan.delete_url(key)
+   if ret ==1 or ret == -2:  #Could not get fileName for this URL (-2), delete success (1)
+      res.delete_a_key(key)
+
 def weekly_delete():
     initialize_logger ()
     delete_all_records()
