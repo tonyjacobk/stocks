@@ -222,7 +222,7 @@
                     <td>{{ row['target'] }}</td>
 		    <td>{{ row['price'] }}</td>
                     <td>
-                        <a href="{{ row['URL'] }}" target="_blank">
+                    <a href="{{ row.URL.replace('https://mega.co.nz/#!', request.url_root.rstrip('/') +'/show/') }}" target="_blank">
                             <img src="{{ url_for('static', filename='icon.png') }}" alt="URL Icon" width="20">
                         </a>
                     </td>
