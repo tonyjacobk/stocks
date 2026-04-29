@@ -16,7 +16,7 @@ def delete_all_records():
        res.delete_a_key(key)
        continue
    ret= MegaMan.delete_url(key)
-   if ret ==1 or ret == -2:  #Could not get fileName for this URL (-2), delete success (1)
+   if ret ==1:  #Could not get fileName for this URL (-2), delete success (1)
       res.delete_a_key(key)
 
 def weekly_delete():

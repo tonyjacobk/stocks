@@ -91,7 +91,7 @@ class MegaManager:
       return -1
 
     def delete_url(self,myurl):
-     name=self.get_file_Name_from_url(myurl)
+     name=self.get_file_Name_from_url(myurl.strip())
     
      if name:
         logger.info("Got fileName: %s from URL: %s",name,myurl)
@@ -110,4 +110,6 @@ class MegaManager:
      except Exception as E:
       print("Could not find file from this URL %s",URL)
       return None
-MegaMan=MegaManager("tonyjacobk@gmail.com","Simansy@2022")
+MegaMan=MegaManager("tonyjacobk@gmail.com","Seemu@2002")
+MegaMan.delete_url("https://mega.nz/file/TA9wELLA#ENlZZN6c3tecTK-_frOiGIKSw-T6U8TQzqgoWyD3xW8")
+
