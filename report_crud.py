@@ -107,6 +107,53 @@ def delete():
     search_params={'search_by_code':code,'search_by_company':comp}
     return redirect(url_for('crud.index',page=pag,**search_params))
 
+@crud_bp.route('/multiple_delete', methods=['POST'])
+def multiple_delete():
+    print("In multiple delete")
+    for key, value in request.args.items():
+     print(f"{key}: {value}")
+    code=request.form.get('search_by_code')
+    comp=request.form.get('search_by_company')
+    pag=request.form.get('page')
+    if not pag:
+        pag=1
+    print(code,comp,pag)
+    search_params={'search_by_code':code,'search_by_company':comp}
+    selected_indices = request.form.getlist('selected_rows')
+
+    selected_data = []
+    conn = get_connection()
+    cursor = conn.cursor()
+
+    for idx in selected_indices:
+        print(idx)
+        row_data = {
+            "code": request.form.get(f"rows[{idx}][code]"),
+            "broker": request.form.get(f"rows[{idx}][broker]"),
+            "site": request.form.get(f"rows[{idx}][site]"),
+            "date": request.form.get(f"rows[{idx}][date]")
+
+        }
+        cursor.execute("""
+        SELECT site  FROM reports
+        WHERE NSEKEY=%s AND broker=%s AND report_date=%s
+        """,(row_data["code"],row_data["broker"], row_data["date"]))
+
+        results=cursor.fetchall()
+        if results[0]['site'] == 'tel':
+          res.set_a_value(f"rows[{idx}][url]")
+
+        cursor.execute("""
+        DELETE  FROM reports
+        WHERE NSEKEY=%s AND broker=%s AND report_date=%s
+        """,(row_data["code"],row_data["broker"], row_data["date"]))
+        selected_data.append(row_data)
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return redirect(url_for('crud.index',page=pag,**search_params))
+
 @crud_bp.route('/save', methods=['POST'])
 def save():
     code=request.form.get('search_by_code')
@@ -135,4 +182,5 @@ def save():
     conn.close()
     search_params={'search_by_code':code,'search_by_company':comp}
     return redirect(url_for('crud.index',page=pag,**search_params))
+
 
