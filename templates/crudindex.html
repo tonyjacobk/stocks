@@ -89,40 +89,29 @@
                 <input type="hidden" name="rows[{{ loop.index0 }}][url]" value="{{ row.URL }}">
 
             </td>
-
-            <!-- DISPLAY -->
-            <td>{{ row.company }}</td>
-            <td>{{ row.NSEKEY }}</td>
-            <td>{{ row.broker }}</td>
-            <td>{{ row.URL }}</td>
-            <td>{{ row.recommendation }}</td>
-            <td>{{ row.target }}</td>
-            <td>{{ row.report_date }}</td>
-            <td>{{ row.site }}</td>
-
-            <!-- ROW ACTIONS -->
-            <td>
-                <form method="POST" class="inline">
+      <form method="POST" class="inline">
 
                     {% for key, value in request.args.items() %}
                         <input type="hidden" name="{{ key }}" value="{{ value }}">
                     {% endfor %}
                     <input type="hidden" name="page" value="{{ page }}">
-
-                    <input type="hidden" name="company" value="{{ row.company }}">
-                    <input type="hidden" name="code" value="{{ row.NSEKEY }}">
-                    <input type="hidden" name="broker" value="{{ row.broker }}">
-                    <input type="hidden" name="URL" value="{{ row.URL }}">
-                    <input type="hidden" name="recommendation" value="{{ row.recommendation }}">
-                    <input type="hidden" name="target" value="{{ row.target }}">
-                    <input type="hidden" name="report_date" value="{{ row.report_date }}">
-                    <input type="hidden" name="site" value="{{ row.site }}">
                     <input type="hidden" name="original_code" value="{{ row.NSEKEY }}">
+            <!-- DISPLAY -->
+    <td><input type="text" name="company" value="{{ row.company }}"></td>
+    <td><input type="text" name="code" value="{{ row.NSEKEY }}"></td>
+    <td><input type="text" name="broker" value="{{ row.broker }}"></td>
+    <td><input type="text" name="URL" value="{{ row.URL }}" size="15"></td> <!-- compact URL -->
+    <td><input type="text" name="recommendation" value="{{ row.recommendation }}"></td>
+    <td><input type="text" name="target" value="{{ row.target }}"></td>
+    <td><input type="date" name="report_date" value="{{ row.report_date }}"></td>
+    <td><input type="text" name="site" value="{{ row.site }}"></td>
+            <!-- ROW ACTIONS -->
+            <td>
 
                     <button type="submit" formaction="{{ url_for('crud.save') }}">Save</button>
                     <button type="submit" formaction="{{ url_for('crud.delete') }}">Delete</button>
-                </form>
             </td>
+      </form>
         </tr>
         {% endfor %}
     </table>
