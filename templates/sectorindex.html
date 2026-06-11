@@ -90,6 +90,16 @@
                                    '{{ row.URL }}')">
          Move
         </button>
+	<button type="button"
+            onclick="openEditModal('{{ row.company }}',
+                                   '{{ row.broker }}',
+                                   '{{ row.report_date }}',
+                                   '{{ row.site }}',
+                                   '{{ row.URL }}',
+				   '{{ row.id }}')">
+         Edit
+        </button>
+
 </td>
 
     </tr>
@@ -151,6 +161,53 @@
     </form>
 </div>
 
+<div id="editModal" style="display:none; position:fixed; top:20%; left:30%;
+     background:#fff; border:1px solid #000; padding:20px; z-index:1000; width:400px;">
+    <h3>Edit Report</h3>
+    <form id="editForm" method="post" action="{{ url_for('sector.edit') }}">
+        <div class="form-row">
+            <label for="editCompany">Company Name:</label>
+            <input type="text" name="company" id="editCompany">
+        </div>
+
+
+        <div class="form-row">
+            <label for="modalBroker">Broker Name:</label>
+            <select name="broker" id="editBroker">
+             {% for broker in brokers %} <option value="{{ broker }}">{{ broker }}</option> {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-row">
+            <label for="modalDate">Date:</label>
+            <input type="date" name="date" id="editDate">
+        </div>
+
+        <div class="form-row">
+            <label for="modalURL">URL:</label>
+            <input type="text" name="URL" id="editURL">
+        </div>
+
+
+         <div class="form-row">
+            <input type="hidden" name="site" id="editsite">
+	    <input type="hidden" name="eid" id="editid">
+            <input type="hidden" name="filename" id="fname">
+            <input type="hidden" name="olddate" id="olddate">
+        </div>
+
+
+   <div class="form-actions">
+            <button type="submit">Save</button>
+            <button type="button" onclick="closeEdit()">Ignore</button>
+        </div>
+    </form>
+</div>
+
+
+
+
+
 <style>
     .form-row {
         display: flex;
@@ -193,6 +250,26 @@ function openMoveModal(company, broker, date, site,url) {
 function closeModal() {
     document.getElementById('moveModal').style.display = 'none';
 }
+
+function openEditModal(company, broker, date, site,url,id) {
+    // Populate inputs with values
+    document.getElementById('editCompany').value = company;
+    document.getElementById('editBroker').value = broker;
+    document.getElementById('editDate').value = date;
+    document.getElementById('editURL').value = url;
+    document.getElementById('editsite').value = site;
+    document.getElementById('editid').value = id;
+    document.getElementById('fname').value = company;
+    document.getElementById('olddate').value = date;
+    // Show modal
+    document.getElementById('editModal').style.display = 'block';
+}
+function closeEdit() {
+    document.getElementById('editModal').style.display = 'none';
+}
+
+
+
 </script>
 
 <!-- PAGINATION -->

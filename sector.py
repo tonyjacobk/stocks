@@ -148,3 +148,26 @@ def move():
     conn.close()
     return redirect(url_for('sector.index'))
 
+@sector_bp.route('/edit', methods=['POST'])
+def edit():
+    print (request.form)
+    company = request.form['company']
+    broker = request.form['broker']
+    report_date = request.form['date']
+    URL=request.form["URL"]
+    site=request.form['site']
+    olddate=request.form['olddate']
+    fname=request.form['filename']
+    cid=request.form['eid']
+    print(request.form)
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        UPDATE gen_reports
+        SET company=%s,report_date=%s,broker=%s,URL=%s,site=%s
+        where id = %s
+    """, (company,report_date,broker,URL,site,cid))
+    conn.commit()
+    cursor.close()
+    conn.close()
+    return redirect(url_for('sector.index')) 

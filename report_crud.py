@@ -74,8 +74,8 @@ def index(key=None, value=None, page=1):
                            search_by_code=search_by_code,
                            search_by_company=search_by_company)
 
-@crud_bp.route('/delete', methods=['POST'])
-def delete():
+@crud_bp.route('/move', methods=['POST'])
+def move():
     print(request.form)
     code=request.form.get('search_by_code')
     comp=request.form.get('search_by_company')
@@ -88,15 +88,19 @@ def delete():
     broker = request.form['broker']
     report_date = request.form['report_date']
     url=request.form['URL']
+    site=request.form['site']
     conn = get_connection()
     cursor = conn.cursor()
+    cursor.execute("""
+       INSERT into  gen_reports
+        (company,report_date,broker,URL,site)
+        VALUES (%s,%s,%s,%s,%s)
+    """, (company,report_date,broker,url,site))
     cursor.execute("""
         SELECT site  FROM reports
         WHERE company=%s AND broker=%s AND report_date=%s
         """,(company, broker, report_date))
     results=cursor.fetchall()
-    if results[0]['site'] == 'tel':
-     res.set_a_value(url)
     cursor.execute("""
         DELETE FROM reports 
         WHERE company=%s AND broker=%s AND report_date=%s
