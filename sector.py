@@ -54,7 +54,7 @@ def index(key=None, value=None, page=1):
     data_query = "SELECT * " + base_query + where_clause + f" ORDER BY report_date DESC LIMIT %s OFFSET %s"
     if  where_clause:
          data_query = "SELECT * " + base_query + where_clause + sort_query+f" LIMIT %s OFFSET %s"
-    print(data_query)
+  #  print(data_query)
     params.extend([page_size, offset])
     cursor.execute(data_query, tuple(params))
 
@@ -150,7 +150,6 @@ def move():
 
 @sector_bp.route('/edit', methods=['POST'])
 def edit():
-    print (request.form)
     company = request.form['company']
     broker = request.form['broker']
     report_date = request.form['date']
@@ -159,7 +158,6 @@ def edit():
     olddate=request.form['olddate']
     fname=request.form['filename']
     cid=request.form['eid']
-    print(request.form)
     conn = get_connection()
     cursor = conn.cursor()
     cursor.execute("""

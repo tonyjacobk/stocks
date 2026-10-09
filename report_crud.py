@@ -25,6 +25,7 @@ def index(key=None, value=None, page=1):
     # Get search parameters
     search_by_code = request.args.get('search_by_code', '')
     search_by_company = request.args.get('search_by_company', '')
+    search_by_broker= request.args.get('search_by_broker', '')
 
     # Base query
     base_query = "FROM reports "
@@ -43,6 +44,9 @@ def index(key=None, value=None, page=1):
     if search_by_company:
         conditions.append("company LIKE %s")
         params.append(f"%{search_by_company}%")
+    if search_by_broker:
+        conditions.append("broker LIKE %s")
+        params.append(f"%{search_by_broker}%")
 
     where_clause = " WHERE " + " AND ".join(conditions) if conditions else ""
     print("Where",where_clause)
@@ -72,6 +76,7 @@ def index(key=None, value=None, page=1):
                            key=key,
                            value=value,
                            search_by_code=search_by_code,
+                           search_by_broker=search_by_broker,
                            search_by_company=search_by_company)
 
 @crud_bp.route('/move', methods=['POST'])
@@ -162,6 +167,7 @@ def multiple_delete():
 def save():
     code=request.form.get('search_by_code')
     comp=request.form.get('search_by_company')
+    brok=request.form.get('search_by_broker')
     pag=request.form.get('page')
 
     data = (
@@ -184,7 +190,7 @@ def save():
     conn.commit()
     cursor.close()
     conn.close()
-    search_params={'search_by_code':code,'search_by_company':comp}
+    search_params={'search_by_code':code,'search_by_company':comp,'search_by_broker':brok}
     return redirect(url_for('crud.index',page=pag,**search_params))
 
 

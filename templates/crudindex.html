@@ -41,6 +41,8 @@
 
         <label>Search by Company:</label>
         <input type="text" name="search_by_company" value="{{ search_by_company or '' }}">
+        <label>Search by Broker:</label>
+        <input type="text" name="search_by_broker" value="{{ search_by_broker or '' }}">
 
         <button type="submit">Search</button>
     </form>
@@ -122,6 +124,7 @@
     {% if page > 1 %}
         <a href="{{ url_for('crud.index', page=page-1,
             search_by_code=search_by_code,
+	    search_by_broker=search_by_broker,
             search_by_company=search_by_company) }}">Previous</a>
     {% endif %}
 
@@ -130,6 +133,7 @@
     {% if page < total_pages %}
         <a href="{{ url_for('crud.index', page=page+1,
             search_by_code=search_by_code,
+	    search_by_broker=search_by_broker,
             search_by_company=search_by_company) }}">Next</a>
     {% endif %}
 </div>
