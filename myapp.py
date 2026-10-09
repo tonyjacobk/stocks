@@ -4,7 +4,7 @@ from price import get_price,load_price,get_date
 import urllib.parse
 from controls import brokers
 
-rows_per_page=20
+rows_per_page=2
 row_dict=load_price()
 report_date=row_dict["Bhavdate"]
 report_bp=Blueprint("report",__name__)
@@ -13,8 +13,9 @@ unique_sorted_brokers = sorted(set(brokers.values()))
 @report_bp.route('/')
 @report_bp.route('/<int:page>')
 def index(page=1):
-    data,total_pages=get_rows(page,20)
+    data,total_pages=get_rows(page,rows_per_page)
     get_price(data,row_dict)
+    print(data)
     return render_template('index.html', data=data, page=page, total_pages=total_pages,report_date=report_date, brokers=unique_sorted_brokers)
 @report_bp.route('/brk/<brok>')
 @report_bp.route('/brk/<brok>/<int:page>')
@@ -55,7 +56,6 @@ def addcomp():
     site="manu"
     fname=request.form['filename']
     nsekey=request.form['nsekey']
-    print(request.form)
     add_company(company,broker,URL,report_date,recomm,target,site,nsekey)
     return redirect(url_for('report.index'))
 
